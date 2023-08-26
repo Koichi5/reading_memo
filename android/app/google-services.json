@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1010266950422",
+    "project_id": "reading-memo-67bb8",
+    "storage_bucket": "reading-memo-67bb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010266950422:android:7fdef2f11e6bea0d4c9e37",
+        "android_client_info": {
+          "package_name": "com.example.reading_memo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010266950422-o825la8ksdre8i9pftcpa861nj2nat10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoXrcTHCz4lSquu9Xdr_Dd5uw7jYqB-K8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010266950422-o825la8ksdre8i9pftcpa861nj2nat10.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

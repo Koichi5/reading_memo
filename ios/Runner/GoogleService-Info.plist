@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1010266950422-30i33aqtnm63j653afg700hig46gerod.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1010266950422-30i33aqtnm63j653afg700hig46gerod</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA_f0KSDt6pNXyyctnR8ZGMWSrQFU57Xnc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1010266950422</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.readingMemo</string>
+	<key>PROJECT_ID</key>
+	<string>reading-memo-67bb8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>reading-memo-67bb8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1010266950422:ios:5611b17b3c1253d04c9e37</string>
+</dict>
+</plist>
