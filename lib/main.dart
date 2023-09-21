@@ -61,6 +61,30 @@ Future<void> changeToMemo({required String text}) async {
   }
 }
 
+Future<void> changeToMemoWithSudachi({required String text}) async {
+  final url =
+      "https://us-central1-reading-memo-67bb8.cloudfunctions.net/changeToMemoWithSudachi?text=$text";
+  final response = await http.get(Uri.parse(url));
+  print("response : $response");
+  print("response.body : ${response.body}");
+  if (response.statusCode == 200) {
+    log('Response data: ${response.body}');
+  } else {
+    log('Failed to call cloud function. Status code: ${response.statusCode}');
+  }
+}
+
+// Future<void> changeToMemoWithPysummarization({required String text}) async {
+//   final url =
+//       "https://us-central1-reading-memo-67bb8.cloudfunctions.net/changeToMemoWithPysummarization?text=$text";
+//   final response = await http.get(Uri.parse(url));
+//   if (response.statusCode == 200) {
+//     log("Response data: ${response.body}");
+//   } else {
+//     log('Failed to call cloud function. Status code: ${response.statusCode}');
+//   }
+// }
+
 // final formattedTextProvider = StateProvider<String>((ref) => "");
 
 // Future<void> changeToMemoWithSudachi({required String text}) async {
@@ -71,6 +95,30 @@ Future<void> changeToMemo({required String text}) async {
 //   print("response.body : ${response.body}");
 //   if (response.statusCode == 200) {
 //     log('Response data: ${response.body}');
+//   } else {
+//     log('Failed to call cloud function. Status code: ${response.statusCode}');
+//   }
+// }
+
+// Future<void> changeToMemoWithPysummarization({required String text}) async {
+//   final url =
+//       "https://us-central1-reading-memo-67bb8.cloudfunctions.net/changeToMemoWithPysummarization?text=$text";
+//   final response = await http.get(Uri.parse(url));
+//   ref.watch(formattedTextProvider.notifier).state = response.body;
+//   if (response.statusCode == 200) {
+//     log("Response data: ${response.body}");
+//   } else {
+//     log('Failed to call cloud function. Status code: ${response.statusCode}');
+//   }
+// }
+
+// Future<void> pysummarizationTest({required String text}) async {
+//   final url =
+//       "https://us-central1-reading-memo-67bb8.cloudfunctions.net/pysummarizationTest?text=$text";
+//   final response = await http.get(Uri.parse(url));
+//   ref.watch(formattedTextProvider.notifier).state = response.body;
+//   if (response.statusCode == 200) {
+//     log("Response data: ${response.body}");
 //   } else {
 //     log('Failed to call cloud function. Status code: ${response.statusCode}');
 //   }
@@ -99,15 +147,13 @@ class MyHomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<void> changeToMemoWithSudachi({required String text}) async {
+    Future<void> sayHello({required String text}) async {
       final url =
-          "https://us-central1-reading-memo-67bb8.cloudfunctions.net/changeToMemoWithSudachi?text=$text";
+          "https://us-central1-reading-memo-67bb8.cloudfunctions.net/sayHello?text=$text";
       final response = await http.get(Uri.parse(url));
       ref.watch(formattedTextProvider.notifier).state = response.body;
-      print("response : $response");
-      print("response.body : ${response.body}");
       if (response.statusCode == 200) {
-        log('Response data: ${response.body}');
+        log("Response data: ${response.body}");
       } else {
         log('Failed to call cloud function. Status code: ${response.statusCode}');
       }
@@ -120,7 +166,7 @@ class MyHomePage extends HookConsumerWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                changeToMemoWithSudachi(text: "アインシュタインは相対性理論を発見して、ベロを出した天才科学者です。");
+                sayHello(text: "Keita");
               },
               child: const Text("change to memo"),
             ),
