@@ -6,48 +6,96 @@ from firebase_functions import firestore_fn, https_fn
 from firebase_admin import initialize_app, firestore
 import google.cloud.firestore
 import MeCab
-from sudachipy import Dictionary, tokenizer
+from pysummarization.nlpbase.auto_abstractor import AutoAbstractor
+from pysummarization.tokenizabledoc.mecab_tokenizer import MeCabTokenizer
+from pysummarization.abstractabledoc.top_n_rank_abstractor import TopNRankAbstractor
+from pysummarization.nlp_base import NlpBase
+from pysummarization.similarityfilter.tfidf_cosine import TfIdfCosine
 
 app = initialize_app()
 
 @https_fn.on_request()
-def changeToMemoWithSudachi(req: https_fn.Request) -> https_fn.Response:
+def changeToMemoWithPysummarization(req: https_fn.Request) -> https_fn.Response:
     text = req.args.get("text")
     if text is None:
         return https_fn.Response("No text parameter provided", status=400)
+    
     firestore_client = google.cloud.firestore.Client = firestore.client()
-    tokenizer_obj = Dictionary().create()
-    mode = tokenizer.Tokenizer.SplitMode.C  # モードCを指定
+    # NLPのオブジェクト
+    nlp_base = NlpBase()
     
-    words = [m.surface() for m in tokenizer_obj.tokenize(text, mode)]
+    # トークナイザーを設定します。 これは、MeCabを使用した日本語のトークナイザーです
+    nlp_base.tokenizable_doc = MeCabTokenizer()
     
-    formatted_text = []
-    append_bullet = True  # 「・」を追加するかどうかのフラグ
-    for word in words:
-        # 「・」を追加する条件
-        if append_bullet and word not in ["って", "、", "。", "んだ"]:
-            formatted_text.append("・")
-            append_bullet = False
-            
-        # 「って」や「んだ」を除外する
-        if word in ["って", "んだ"]:
-            continue
-        
-        formatted_text.append(word)
-        
-        # 「って」や「は」や「が」の後、または句読点「、。」の前に改行を入れる
-        if word in ["は", "が", "、", "。"]:
-            formatted_text.append("\n")
-            append_bullet = True
+    similarity_filter = TfIdfCosine()
     
-    print("".join(formatted_text))
-    joined_text = "".join(formatted_text)
-
+    # NLPのオブジェクトを設定します
+    similarity_filter.nlp_base = nlp_base
+    
+    # 類似性がこの値を超えると、文は切り捨てられます
+    similarity_filter.similarity_limit = 0.25
+    
+    # 自動要約のオブジェクト
+    auto_abstractor = AutoAbstractor()
+    
+    # トークナイザーを設定します。 これは、MeCabを使用した日本語のトークナイザーです
+    auto_abstractor.tokenizable_doc = MeCabTokenizer()
+    
+    # ドキュメントを抽象化およびフィルタリングするオブジェクト
+    abstractable_doc = TopNRankAbstractor()
+    
+    # オブジェクトを委任し、要約を実行します
+    # similarity_filter機能追加
+    result_dict = auto_abstractor.summarize(text, abstractable_doc, similarity_filter)
+    
+    # 出力
+    for sentence in result_dict["summarize_result"]:
+        print(sentence)
+    
     _, doc_ref = firestore_client.collection("formatted_text").add({
-        "text" : joined_text
+        "text" : sentence
     })
 
     return https_fn.Response(f"Memo with ID {doc_ref.id} added.")
+
+# @https_fn.on_request()
+# def changeToMemoWithSudachi(req: https_fn.Request) -> https_fn.Response:
+#     text = req.args.get("text")
+#     if text is None:
+#         return https_fn.Response("No text parameter provided", status=400)
+#     firestore_client = google.cloud.firestore.Client = firestore.client()
+#     tokenizer_obj = Dictionary().create()
+#     mode = tokenizer.Tokenizer.SplitMode.C  # モードCを指定
+    
+#     words = [m.surface() for m in tokenizer_obj.tokenize(text, mode)]
+    
+#     formatted_text = []
+#     append_bullet = True  # 「・」を追加するかどうかのフラグ
+#     for word in words:
+#         # 「・」を追加する条件
+#         if append_bullet and word not in ["って", "、", "。", "んだ"]:
+#             formatted_text.append("・")
+#             append_bullet = False
+            
+#         # 「って」や「んだ」を除外する
+#         if word in ["って", "んだ"]:
+#             continue
+        
+#         formatted_text.append(word)
+        
+#         # 「って」や「は」や「が」の後、または句読点「、。」の前に改行を入れる
+#         if word in ["は", "が", "、", "。"]:
+#             formatted_text.append("\n")
+#             append_bullet = True
+    
+#     print("".join(formatted_text))
+#     joined_text = "".join(formatted_text)
+
+#     _, doc_ref = firestore_client.collection("formatted_text").add({
+#         "text" : joined_text
+#     })
+
+#     return https_fn.Response(f"Memo with ID {doc_ref.id} added.")
 
 # @https_fn.on_request()
 # def changeToMemo(req: https_fn.Request) -> https_fn.Response:
