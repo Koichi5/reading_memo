@@ -1,4 +1,5 @@
 firebase_functions~=0.1.0
 flask_cors==3.0.10
-mecab-python
-pysummarization==1.1.9
+sumy
+tinysegmenter
+Janome

@@ -20,15 +20,15 @@ void main() async {
   );
 }
 
-void helloWorld() async {
+void helloWorld({required String text}) async {
   try {
-    const url =
-        "https://asia-northeast1-reading-memo-67bb8.cloudfunctions.net/testFunction";
+    final url =
+        "https://us-central1-reading-memo-67bb8.cloudfunctions.net/sayHello?text=$text";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       log('Response data: ${response.body}');
     } else {
-      log('Failed to call cloud function. Status code: ${response.statusCode}');
+      log('Failed to call cloud function. Status code: ${response.statusCode}${response.body}');
     }
   } on FirebaseFunctionsException catch (e) {
     log(e.code);
@@ -124,6 +124,29 @@ Future<void> changeToMemoWithSudachi({required String text}) async {
 //   }
 // }
 
+// Future<void> sayHello({required String text}) async {
+//   final url =
+//       "https://us-central1-reading-memo-67bb8.cloudfunctions.net/sayHello?text=$text";
+//   final response = await http.get(Uri.parse(url));
+//   ref.watch(formattedTextProvider.notifier).state = response.body;
+//   if (response.statusCode == 200) {
+//     log("Response data: ${response.body}");
+//   } else {
+//     log('Failed to call cloud function. Status code: ${response.statusCode}');
+//   }
+// }
+
+Future<void> summary({required String text}) async {
+  final url =
+      "https://us-central1-reading-memo-67bb8.cloudfunctions.net/summary?text=$text";
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    log("Response data: ${response.body}");
+  } else {
+    log('Failed to call cloud function. Status code: ${response.statusCode}${response.body}');
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -147,17 +170,7 @@ class MyHomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<void> sayHello({required String text}) async {
-      final url =
-          "https://us-central1-reading-memo-67bb8.cloudfunctions.net/sayHello?text=$text";
-      final response = await http.get(Uri.parse(url));
-      ref.watch(formattedTextProvider.notifier).state = response.body;
-      if (response.statusCode == 200) {
-        log("Response data: ${response.body}");
-      } else {
-        log('Failed to call cloud function. Status code: ${response.statusCode}');
-      }
-    }
+    // https://us-central1-reading-memo-67bb8.cloudfunctions.net/pysummarizationTest
 
     return Scaffold(
       appBar: AppBar(title: const Text("サンプル")),
@@ -165,10 +178,12 @@ class MyHomePage extends HookConsumerWidget {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () {
-                sayHello(text: "Keita");
+              onPressed: () async {
+                await summary(
+                    text:
+                        "バージョンアップを行うことで機能・操作性・品質などが向上し、より快適にご利用になれます。 新バージョンでは、フォルダが階層式になり、ファイルの検索や整理ができます。アップデートしない場合、フォルダに関する機能に影響を与える可能性があります。 手順は簡単。アプリストアで「Notta」を検索して「アップデート」をクッリクしてください。");
               },
-              child: const Text("change to memo"),
+              child: const Text("summary"),
             ),
             Text(ref.watch(formattedTextProvider.notifier).state),
           ],
